@@ -1,14 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React, { lazy, Suspense } from "react";
+import ReactDOM from "react-dom";
+import { ThemeProvider } from "styled-components";
+
+import "./index.css";
+import * as serviceWorker from "./serviceWorker";
+
+import { Spinner } from "./components/Spinner";
+import { GlobalStyle, theme } from "theme";
+
+const App = lazy(() => import("./App"));
+const Providers = lazy(() => import("./Providers"));
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <Suspense fallback={<Spinner size={"lg"} />}>
+        <Providers>
+          <App />
+        </Providers>
+      </Suspense>
+    </ThemeProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
