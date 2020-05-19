@@ -1,7 +1,9 @@
 import React from "react";
 
+import { SignUp } from "./containers/SignUp";
+
 function App() {
-  return <div>App</div>;
+  return <SignUp />;
 }
 
 export default App;

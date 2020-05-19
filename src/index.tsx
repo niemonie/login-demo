@@ -1,26 +1,21 @@
 import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom";
-import { ThemeProvider } from "styled-components";
 
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 
 import { Spinner } from "./components/Spinner";
-import { GlobalStyle, theme } from "theme";
 
 const App = lazy(() => import("./App"));
 const Providers = lazy(() => import("./Providers"));
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      <Suspense fallback={<Spinner size={"lg"} />}>
-        <Providers>
-          <App />
-        </Providers>
-      </Suspense>
-    </ThemeProvider>
+    <Suspense fallback={<Spinner />}>
+      <Providers>
+        <App />
+      </Providers>
+    </Suspense>
   </React.StrictMode>,
   document.getElementById("root")
 );
