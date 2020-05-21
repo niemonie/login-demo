@@ -1,67 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
+import fetchMock from "fetch-mock";
+import styled from "styled-components";
 import { Form, Formik } from "formik";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
 
 import { validationSignUpFormSchema } from "./validationSignUpFormSchema";
 
 import { Button } from "components/Button";
 
+import { postCredentials } from "modules/signUp/api";
+import { useSignUpFormStyles } from "containers/SignUp/SignUpForm/useSignUpFormStyles";
+import { signUpFormMock } from "modules/signUp/mocks";
+
+import { ICredentials } from "modules/signUp/types/ICredentials";
+import { EmailTextField } from "./EmailTextField";
+import { PasswordTextField } from "./PasswordTextField";
+
 const SignUpForm = () => {
-  const useStyles = makeStyles((theme) => ({
-    form: {
-      width: "100%",
-      marginTop: theme.spacing(1),
-    },
-  }));
+  const classes = useSignUpFormStyles();
+  const [signUpError, setSignUpError] = useState("");
+  const [login, setLogin] = useState("");
 
-  const classes = useStyles();
   return (
-    <Formik
-      initialValues={{
-        email: "",
-        password: "",
-      }}
-      validationSchema={validationSignUpFormSchema}
-      onSubmit={() => {}}
-      render={(props) => (
-        <Form className={classes.form}>
-          <TextField
-            error={Boolean(props.errors.email)}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={props.values.email}
-            onChange={props.handleChange}
-            helperText={props.errors.email && String(props.errors.email)}
-          />
-          <TextField
-            error={Boolean(props.errors.password)}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={props.values.password}
-            onChange={props.handleChange}
-            helperText={props.errors.password && String(props.errors.password)}
-          />
+    <>
+      {signUpError && <StyledErrorBox>{signUpError}</StyledErrorBox>}
+      {login !== "" && <StyledLoginBox>Witaj {login}</StyledLoginBox>}
 
-          <Button>Sign In</Button>
-        </Form>
-      )}
-    />
+      <Formik<ICredentials>
+        initialValues={{
+          email: "",
+          password: "",
+        }}
+        validationSchema={validationSignUpFormSchema}
+        onSubmit={async (values) => {
+          signUpFormMock();
+          const response = await postCredentials(values).catch(() => {
+            setLogin("");
+            setSignUpError("Błąd logowania");
+          });
+          if (response) {
+            setSignUpError("");
+            setLogin(response);
+          }
+          fetchMock.restore();
+        }}
+      >
+        {({ isValid, isSubmitting, dirty }) => (
+          <Form className={classes.form}>
+            <EmailTextField />
+            <PasswordTextField />
+            <Button disabled={!isValid || isSubmitting || !dirty}>
+              Sign In
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </>
   );
 };
+
+const StyledErrorBox = styled.div`
+  color: darkred;
+  font-size: 18px;
+`;
+
+const StyledLoginBox = styled.div`
+  color: darkgreen;
+  font-size: 18px;
+`;
 
 export { SignUpForm };

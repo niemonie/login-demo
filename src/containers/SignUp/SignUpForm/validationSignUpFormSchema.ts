@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 
-import { ISignUpForm } from "modules/signUp/types/ISignUpForm";
+import { ICredentials } from "modules/signUp/types/ICredentials";
 
-export const validationSignUpFormSchema = Yup.object<ISignUpForm>().shape({
+export const validationSignUpFormSchema = Yup.object<ICredentials>().shape({
   email: Yup.string()
     .email("Nieprawidłowy email")
     .required("Email jest wymagany"),
