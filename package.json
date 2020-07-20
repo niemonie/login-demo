@@ -17,7 +17,7 @@
     "fetch-mock": "^9.9.0",
     "formik": "^2.1.4",
     "husky": "^4.2.5",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "prettier": "^2.0.5",
     "pretty-quick": "^2.0.1",
     "react": "^16.13.1",
